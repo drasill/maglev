@@ -2,10 +2,11 @@
 set -e
 
 # Battery icons
-tmux set -g @batt_charged_icon "︎♡"
-tmux set -g @batt_charging_icon "︎♡"
-tmux set -g @batt_discharging_icon "︎♡"
-tmux set -g @batt_attached_icon "︎♡"
+tmux set -g @batt_charged_icon "♡"
+tmux set -g @batt_charging_icon "♡"
+tmux set -g @batt_discharging_icon "♡"
+tmux set -g @batt_attached_icon "♡"
+tmux set -g @cpu_icon ""
 
 
 # BEGIN Fix CPU segment --------------------------------------------------------
@@ -89,8 +90,8 @@ apply_theme() {
     tmux set -g status-style fg=$status_fg,bg=$status_bg
 
     session_fg=colour16  # black
-    session_bg=colour11 # yellow
-    status_left="#[fg=$session_fg,bg=$session_bg,bold] ❐ #S #[fg=$session_bg,bg=$status_bg,nobold]$left_separator_black"
+    session_bg=colour3 # yellow
+    status_left="#[fg=$session_fg,bg=$session_bg,bold] ❐ #(hostname -s) $left_separator #S #[fg=$session_bg,bg=$status_bg,nobold]$left_separator_black"
     if [ x"`tmux -q -L tmux_theme_status_left_test -f /dev/null new-session -d \; show -g -v status-left \; kill-session`" = x"[#S] " ] ; then
         status_left="$status_left "
     fi
@@ -130,7 +131,7 @@ apply_theme() {
     whoami_bg=colour160         # red
     host_fg=colour16            # black
     host_bg=colour254           # white
-    status_right="︎#[fg=$time_date_fg,nobold]$right_separator %R $right_separator %a %d %b #[fg=$host_bg]$right_separator_black#[fg=$host_fg,bg=$host_bg,bold] #{battery_icon} #{battery_percentage} $right_separator CPU #{cpu_percentage} "
+    status_right="#[fg=$time_date_fg,nobold]$right_separator %R $right_separator %a %d %b #[fg=$host_bg]$right_separator_black#[fg=$host_fg,bg=$host_bg,bold] #{cpu_icon}#{cpu_percentage} $right_separator #(cat /proc/loadavg | awk '{print \$1\" \"\$2\" \"\$3}') "
     tmux set -g status-right-length 64 \; set -g status-right "$status_right"
 
     # clock
